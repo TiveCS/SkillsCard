@@ -1,9 +1,9 @@
 name: SkillsCard
-author: TiveCS
 version: 1.0
+author: TiveCS
 api-version: 1.13
 main: team.creativecode.skillscard.Main
 commands:
-    skillscard:
-        aliases: [skill, skills, scard]
-        permission: skillscard
+  skillscard:
+    aliases: [skill, skills, card, scard]
+    description: Main command for SkillsCard

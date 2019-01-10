@@ -16,6 +16,7 @@ public class PlayerData {
 	
 	Main plugin = Main.getPlugin(Main.class);
 	
+	HashMap<Integer, Integer> cooldownSlot = new HashMap<Integer, Integer>();
 	OfflinePlayer player;
 	File file;
 	FileConfiguration config;
@@ -32,6 +33,9 @@ public class PlayerData {
 			}
 		}
 		this.config = YamlConfiguration.loadConfiguration(file);
+		if (ConfigManager.contains(getFile(), "cooldown")) {
+			updateCooldownData();
+		}
 	}
 	
 	public boolean unequipCard(int slot) {
@@ -73,6 +77,17 @@ public class PlayerData {
 		return false;
 	}
 	
+	public void executeSkill(int slot, HashMap<String, Object> modifier) {
+		if (!ConfigManager.contains(getFile(), "skills." + slot)) {
+			return;
+		}
+		SkillCard sc = this.getSkillCard(slot);
+		if (Main.chance(sc.getChance())) {
+			executeSkill(sc.getAbilityQuery(), modifier);
+			ConfigManager.input(getFile(), "cooldown." + slot, sc.getCooldown());
+		}
+	}
+	
 	public void executeSkill(List<String> query, HashMap<String, Object> modifier) {
 		
 		for (String q : query) {
@@ -92,6 +107,9 @@ public class PlayerData {
 	public void initBaseData() {
 		ConfigManager.createFile(getFile());
 		ConfigManager.input(getFile(), "player-name", this.player.getName());
+		for (int i = 0; i < 4; i++) {
+			ConfigManager.init(getFile(), "cooldown." + (i + 1), 0);
+		}
 	}
 	
 	public SkillCard getSkillCard(int slot) {
@@ -100,6 +118,12 @@ public class PlayerData {
 		}else {
 			return null;
 		}
+	}
+	
+	public void updateCooldownData() {
+		for (String path : config.getConfigurationSection("cooldown").getKeys(false)) {
+			cooldownSlot.put(Integer.parseInt(path), config.getInt("cooldown." + path));
+		}	
 	}
 	
 	public OfflinePlayer getPlayer() {
@@ -114,5 +138,8 @@ public class PlayerData {
 		return this.config;
 	}
 
+	public HashMap<Integer, Integer> getCooldowns(){
+		return this.cooldownSlot;
+	}
 
 }

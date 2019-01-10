@@ -9,10 +9,10 @@ public class LightningAbility extends Ability{
 	public LightningAbility() {
 		super("lightning");
 		
-		addModifier("target", "@Victim", null);
-		addModifier("x", 0, null);
-		addModifier("y", 0, null);
-		addModifier("z", 0, null);
+		addModifier("target", "@Victim");
+		addModifier("x", 0);
+		addModifier("y", 0);
+		addModifier("z", 0);
 		
 	}
 

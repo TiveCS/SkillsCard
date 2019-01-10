@@ -27,12 +27,12 @@ public class DataConverter {
         return list;
     }
     
-    public static Object matchConvert(String str) {
+    public static Object matchConvert(Object str) {
     	try {
-    		return Double.parseDouble(str);
+    		return Integer.parseInt(str.toString());
     	}catch(Exception e) {}
     	try {
-    		return Integer.parseInt(str);
+    		return Double.parseDouble(str.toString());
     	}catch(Exception e) {}
     	
     	return str;

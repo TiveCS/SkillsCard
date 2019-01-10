@@ -1,8 +1,6 @@
 package team.creativecode.skillscard.events;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -11,7 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import team.creativecode.skillscard.manager.PlayerData;
-import team.creativecode.skillscard.manager.SkillCard;
 
 public class AbilityEvent implements Listener {
 	
@@ -19,17 +16,21 @@ public class AbilityEvent implements Listener {
 	public void onEntityHit(EntityDamageByEntityEvent event) {
 		
 		HashMap<String, Object> input = new HashMap<String, Object>();
-		List<String> query = new ArrayList<String>();
 		if (event.getDamager() instanceof Player && event.getEntity() instanceof LivingEntity ) {
 			LivingEntity victim = (LivingEntity) event.getEntity(), attacker = (LivingEntity) event.getDamager();
-			PlayerData pd = new PlayerData((Player) event.getDamager());
-			SkillCard card = pd.getSkillCard(1);
-			query = card.getAbilityQuery();
-			
 			input.put("victim", victim);
+			input.put("victim-x", victim.getLocation().getX());
+			input.put("victim-y", victim.getLocation().getY());
+			input.put("victim-z", victim.getLocation().getZ());
 			input.put("self", attacker);
+			input.put("self-x", attacker.getLocation().getX());
+			input.put("self-y", attacker.getLocation().getY());
+			input.put("self-z", attacker.getLocation().getZ());
 			
-			pd.executeSkill(query, input);
+			PlayerData pd = new PlayerData((Player) event.getDamager());
+			for (int i = 0; i < 4; i++) {
+				pd.executeSkill((i + 1), input);
+			}
 		}
 	}
 

@@ -22,6 +22,7 @@ public class SkillCard {
     public static File[] files = {};
     public static HashMap<String, SkillCard> skillcards = new HashMap<String, SkillCard>();
 
+    private double chance = 100;
     private boolean correctData = false;
     private File skillfile;
     private long cooldown = 0;
@@ -74,6 +75,7 @@ public class SkillCard {
             this.skillitem = null;
             this.skillfile = null;
             this.skillname = null;
+            this.chance = 0;
             this.correctData = false;
             return;
         }
@@ -86,6 +88,7 @@ public class SkillCard {
                 this.skillitem = sc.getSkillitem();
                 this.abilityquery = sc.getAbilityQuery();
                 this.cooldown = sc.getCooldown();
+                this.chance = sc.getChance();
                 this.executetype = sc.getExecuteType();
                 this.correctData = true;
                 break;
@@ -101,6 +104,7 @@ public class SkillCard {
             this.skillitem = sc.getSkillitem();
             this.skillfile = sc.getSkillfile();
             this.cooldown = sc.getCooldown();
+            this.chance = sc.getChance();
             this.abilityquery = sc.getAbilityQuery();
             this.executetype = sc.getExecuteType();
             this.correctData = true;
@@ -113,6 +117,9 @@ public class SkillCard {
         this.skillname = skillname;
         this.skillfile = file;
         this.skillitem = ItemManager.generateItemFromRaw(this.skillfile, this.skillname + ".item");
+        if (ConfigManager.contains(getSkillfile(), getSkillname() + ".chance")) {
+        	this.chance = Double.parseDouble(ConfigManager.get(getSkillfile(), getSkillname() + ".chance").toString());
+        }
         if (ConfigManager.contains(getSkillfile(), getSkillname() + ".execute-type")) {
         	this.executetype = ExecuteType.valueOf(ConfigManager.get(getSkillfile(), getSkillname() + ".execute-type").toString().toUpperCase());
         }
@@ -127,6 +134,10 @@ public class SkillCard {
     
     public boolean isCorrectData() {
     	return this.correctData;
+    }
+    
+    public double getChance() {
+    	return this.chance;
     }
 
     public ItemStack getSkillitem(){

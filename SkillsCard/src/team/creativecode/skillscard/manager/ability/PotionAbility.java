@@ -1,8 +1,5 @@
 package team.creativecode.skillscard.manager.ability;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -13,12 +10,10 @@ public class PotionAbility extends Ability{
 
 	public PotionAbility() {
 		super("potion");
-		List<String> aliases = new ArrayList<String>();
-		
-		addModifier("duration", 60, aliases);
-		addModifier("type", PotionEffectType.SLOW, aliases);
-		addModifier("amplifier", 1, aliases);
-		addModifier("target", "@Self", aliases);
+		addModifier("duration", 60);
+		addModifier("type", "SLOW");
+		addModifier("amplifier", 1);
+		addModifier("target", "@Self");
 	}
 	
 	@Override

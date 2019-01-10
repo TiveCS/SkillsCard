@@ -38,7 +38,6 @@ public class ItemManager {
     public static ItemStack generateItemFromRaw(File file, String path){
         ItemStack item = new ItemStack(Material.AIR);
         try{
-        	System.out.println(ConfigManager.get(file, path + ".material").toString().toUpperCase());
             item = new ItemStack(Material.valueOf(ConfigManager.get(file, path + ".material").toString().toUpperCase()));
             ItemMeta meta = item.getItemMeta();
             if (ConfigManager.contains(file, path + ".amount")){

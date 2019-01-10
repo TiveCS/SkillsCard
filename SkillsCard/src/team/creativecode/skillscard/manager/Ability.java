@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import team.creativecode.skillscard.Main;
+import team.creativecode.skillscard.util.DataConverter;
 
 public abstract class Ability {
 
@@ -16,6 +17,7 @@ public abstract class Ability {
 	
 	//Will be as default modifier and listed modifier key
 	HashMap<String, Object> modifier = new HashMap<String, Object>();
+	HashMap<String, Object> usedmodifier = new HashMap<String, Object>();
 	HashMap<String, String> modAliases = new HashMap<String, String>();
 	public Ability(String name) {
 		this.ability = name.toUpperCase();
@@ -25,15 +27,23 @@ public abstract class Ability {
 	// Example
 	// lightning{target=@Victim;}
 	public void loadModifier(String queryCode, HashMap<String, Object> modData) {
+		usedmodifier = new HashMap<String, Object>();
+		for (String l : this.modifier.keySet()) {
+			usedmodifier.put(l, this.modifier.get(l));
+		}
 		queryCode = queryCode.substring(this.getDisplayName().length() + 1);
 		queryCode = queryCode.substring(0, queryCode.length() - 1);
 		
 		HashMap<String, Object> temp = new HashMap<String, Object>();
+		for (String mod : this.usedmodifier.keySet()) {
+			temp.put(mod, this.usedmodifier.get(mod));
+		}
+		
 		for (String split : queryCode.split(";")) {
 			String[] sp = split.split("=");
 			temp.put(sp[0], sp[1]);
 		}
-
+		
 		for (String s : temp.keySet()) {
 			String variable = temp.get(s).toString().toLowerCase();
 			if (variable.startsWith("@")) {
@@ -41,11 +51,11 @@ public abstract class Ability {
 				temp.put(s, modData.get(variable));
 			}
 			
-			this.modifier.put(s, temp.get(s));
+			this.usedmodifier.put(s, DataConverter.matchConvert(temp.get(s)));
 		}
 	}
 	
-	public void addModifier(String key, Object defaultValue, List<String> aliases) {
+	public void addModifier(String key, Object defaultValue) {
 		modifier.put(key, defaultValue);
 	}
 	
@@ -61,12 +71,20 @@ public abstract class Ability {
 		return this.ability;
 	}
 	
-	public HashMap<String, Object> getModifier(){
+	public HashMap<String, Object> getDefaultModifier(){
 		return this.modifier;
 	}
 	
-	public Object getModifierData(String key) {
+	public Object getDefaultModifierData(String key) {
 		return this.modifier.get(key);
+	}
+	
+	public HashMap<String, Object> getModifier(){
+		return this.usedmodifier;
+	}
+	
+	public Object getModifierData(String key) {
+		return this.usedmodifier.get(key);
 	}
 	
 	public List<String> getModifierAliases(String key){

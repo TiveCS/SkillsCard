@@ -33,7 +33,7 @@ public class TeleportAbility extends Ability{
 			entity.teleport(loc);
 			
 			if (Boolean.parseBoolean(getModifierData("particle").toString())) {
-				ParticleManager.particle(loc, 1.5, Particle.SPELL_WITCH);
+				ParticleManager.circle(loc, 1.5, Particle.SPELL_WITCH);
 			}
 		}catch(Exception e) {e.printStackTrace();}
 		

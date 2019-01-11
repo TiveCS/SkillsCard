@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import team.creativecode.skillscard.Main;
+import team.creativecode.skillscard.events.InputEvent;
 import team.creativecode.skillscard.util.ConfigManager;
 
 public class PlayerData {
@@ -82,9 +83,10 @@ public class PlayerData {
 			return;
 		}
 		SkillCard sc = this.getSkillCard(slot);
-		if (Main.chance(sc.getChance())) {
+		if (Main.chance(sc.getChance()) && Integer.parseInt(ConfigManager.get(getFile(), "cooldown." + slot).toString()) <= 0) {
 			executeSkill(sc.getAbilityQuery(), modifier);
 			ConfigManager.input(getFile(), "cooldown." + slot, sc.getCooldown());
+			InputEvent.cooldown.put(getPlayer().getUniqueId().toString() + ":" + slot, (int) sc.getCooldown());
 		}
 	}
 	
@@ -124,6 +126,14 @@ public class PlayerData {
 		for (String path : config.getConfigurationSection("cooldown").getKeys(false)) {
 			cooldownSlot.put(Integer.parseInt(path), config.getInt("cooldown." + path));
 		}	
+	}
+	
+	public void setCooldown(int slot, int set) {
+		ConfigManager.input(getFile(), "cooldown." + slot, set);
+		if (Integer.parseInt(ConfigManager.get(getFile(), "cooldown." + slot).toString()) < 0) {
+			ConfigManager.input(getFile(), "cooldown." + slot, 0);
+		}
+		InputEvent.cooldown.put(getPlayer().getUniqueId().toString() + ":" + slot, getCooldowns().get(slot));
 	}
 	
 	public OfflinePlayer getPlayer() {

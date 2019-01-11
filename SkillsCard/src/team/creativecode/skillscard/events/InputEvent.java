@@ -1,5 +1,7 @@
 package team.creativecode.skillscard.events;
 
+import java.util.HashMap;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,11 +17,20 @@ import team.creativecode.skillscard.menu.MenuManager;
 
 public class InputEvent implements Listener {
 	
+	//UUID:SLOT, COOLDOWN
+	public static HashMap<String, Integer> cooldown = new HashMap<String, Integer>();
+	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
 		PlayerData pd = new PlayerData(p);
 		pd.initBaseData();
+		
+		for (int i : pd.getCooldowns().keySet()) {
+			if (pd.getCooldowns().get(i) > 0 ) {
+				cooldown.put(p.getUniqueId().toString() + ":" + i, pd.getCooldowns().get(i));
+			}
+		}
 	}
 	
 	@EventHandler

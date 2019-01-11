@@ -10,7 +10,7 @@ public class ParticleManager {
 	static Main plugin = Main.getPlugin(Main.class);
 	static String version = Main.getNMSVersion();
 	
-	public static void particle(Location loc, double radius, Particle particle) {
+	public static void circle(Location loc, double radius, Particle particle) {
 		
 		for (int degree = 0; degree < 360; degree+=10) {
 			double radian = Math.toRadians(degree);

@@ -43,8 +43,13 @@ public class SkillCardPlayerMenu extends MenuManager {
 				if (i == 10 || i == 12 || i == 14 || i == 16) {
 					int num = (((i / 2) - 4) + (page - 1)*4);
 					if (ConfigManager.contains(pd.getFile(), "skills." + num)) {
-						SkillCard sc = SkillCard.skillcards.get(ConfigManager.get(pd.getFile(), "skills." + num));
-						getMenu().setItem(i, sc.getSkillitem());
+						try {
+							SkillCard sc = SkillCard.skillcards.get(ConfigManager.get(pd.getFile(), "skills." + num));
+							getMenu().setItem(i, sc.getSkillitem());
+						}catch(Exception e) {
+							ConfigManager.input(pd.getFile(), "skills." + num, null);
+							getMenu().setItem(i, ItemManager.generateItem(Material.RED_STAINED_GLASS_PANE, "&cNo Card #" + num, new ArrayList<String>()));
+						}
 					}else {
 						getMenu().setItem(i, ItemManager.generateItem(Material.RED_STAINED_GLASS_PANE, "&cNo Card #" + num, new ArrayList<String>()));	
 					}

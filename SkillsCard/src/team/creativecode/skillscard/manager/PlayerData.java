@@ -122,6 +122,16 @@ public class PlayerData {
 		}
 	}
 	
+	public void registerCooldown() {
+		for (String path : config.getConfigurationSection("cooldown").getKeys(false)) {
+			if (!InputEvent.cooldown.containsKey(getPlayer().getUniqueId().toString() + ":" + path)) {
+				if (getCooldowns().get(Integer.parseInt(path)) > 0) {
+					InputEvent.cooldown.put(getPlayer().getUniqueId().toString() + ":" + path, getCooldowns().get(Integer.parseInt(path)));
+				}
+			}
+		}	
+	}
+	
 	public void updateCooldownData() {
 		for (String path : config.getConfigurationSection("cooldown").getKeys(false)) {
 			cooldownSlot.put(Integer.parseInt(path), config.getInt("cooldown." + path));

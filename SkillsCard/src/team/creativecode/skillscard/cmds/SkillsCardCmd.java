@@ -1,5 +1,6 @@
 package team.creativecode.skillscard.cmds;
 
+import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,6 +10,7 @@ import team.creativecode.skillscard.Main;
 import team.creativecode.skillscard.manager.SkillCard;
 import team.creativecode.skillscard.menu.MenuManager;
 import team.creativecode.skillscard.menu.skillcard.SkillCardPlayerMenu;
+import team.creativecode.skillscard.util.ParticleManager;
 
 public class SkillsCardCmd implements CommandExecutor {
 
@@ -24,10 +26,21 @@ public class SkillsCardCmd implements CommandExecutor {
                 	mm.openMenu();
                     return true;
                 }
+                if (strings.length == 1) {
+                	if (strings[0].equalsIgnoreCase("test")) {
+                		ParticleManager.atomic(p.getLocation(), 1.5, Particle.FLAME, true);
+                		return true;
+                	}
+                	if (p.hasPermission("skillscard.admin")){
+                		if (strings[0].equalsIgnoreCase("reload")) {
+                			return true;
+                		}
+                	 }
+                }
                 if (strings.length == 2) {
-                	if (strings[0].equalsIgnoreCase("get")) {
-	                	if (p.hasPermission("skillscard.admin")) {
-	                		SkillCard sc = SkillCard.skillcards.get(strings[0]);
+                	if (p.hasPermission("skillscard.admin")) {
+	                	if (strings[0].equalsIgnoreCase("get")) {
+	                		SkillCard sc = SkillCard.skillcards.get(strings[1]);
 	                		p.getInventory().addItem(sc.getSkillitem());
 	                		return true;
 	                	}

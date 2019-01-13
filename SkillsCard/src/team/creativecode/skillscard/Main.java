@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import team.creativecode.skillscard.cmds.SkillsCardCmd;
@@ -14,9 +15,14 @@ import team.creativecode.skillscard.manager.PlayerData;
 import team.creativecode.skillscard.manager.SkillCard;
 import team.creativecode.skillscard.manager.ability.BurnAbility;
 import team.creativecode.skillscard.manager.ability.DamageAbility;
+import team.creativecode.skillscard.manager.ability.HealAbility;
 import team.creativecode.skillscard.manager.ability.LightningAbility;
+import team.creativecode.skillscard.manager.ability.ParticleAbility;
 import team.creativecode.skillscard.manager.ability.PotionAbility;
+import team.creativecode.skillscard.manager.ability.SoundAbility;
+import team.creativecode.skillscard.manager.ability.StickyBombAbility;
 import team.creativecode.skillscard.manager.ability.TeleportAbility;
+import team.creativecode.skillscard.manager.ability.ThrustAbility;
 import team.creativecode.skillscard.util.ConfigManager;
 
 public class Main extends JavaPlugin {
@@ -33,6 +39,13 @@ public class Main extends JavaPlugin {
 
 			@Override
 			public void run() {
+				
+				try {
+					for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+						PlayerData pd = new PlayerData(p);
+						pd.registerCooldown();
+					}
+				}catch(Exception e) {}
 
 				try {
 					for (String key : InputEvent.cooldown.keySet()) {
@@ -67,6 +80,11 @@ public class Main extends JavaPlugin {
     	new DamageAbility().register();
     	new BurnAbility().register();
     	new TeleportAbility().register();
+    	new HealAbility().register();
+    	new StickyBombAbility().register();
+    	new SoundAbility().register();
+    	new ThrustAbility().register();
+    	new ParticleAbility().register();
     }
     
     public static boolean chance(double chance) {

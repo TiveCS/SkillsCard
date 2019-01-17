@@ -4,8 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -82,6 +89,10 @@ public class PlayerData {
 		if (!ConfigManager.contains(getFile(), "skills." + slot)) {
 			return;
 		}
+		if (!ConfigManager.contains(getFile(), "cooldown." + slot)) {
+			ConfigManager.init(getFile(), "cooldown." + slot, 0);
+			return;
+		}
 		SkillCard sc = this.getSkillCard(slot);
 		if (Main.chance(sc.getChance()) && Integer.parseInt(ConfigManager.get(getFile(), "cooldown." + slot).toString()) <= 0) {
 			executeSkill(sc.getAbilityQuery(), modifier);
@@ -106,6 +117,68 @@ public class PlayerData {
 		
 	}
 	
+	public void generateBossBarCooldown() {
+		int highest = -1, skillhighest = 0;
+		UUID uuid = this.getPlayer().getUniqueId();
+		for (int key : this.getCooldowns().keySet()) {
+			if (this.getCooldowns().get(key) > 0) {
+				if (highest == -1) {
+					highest = this.getCooldowns().get(key);
+					skillhighest = key;
+				}
+				if (highest > this.getCooldowns().get(key)) {
+					highest = this.getCooldowns().get(key);
+					skillhighest = key;
+				}
+			}
+		}
+		SkillCard sc = null;
+		double min = 0, max = 0;
+		double percentage = 0;
+		try {
+			sc = this.getSkillCard(skillhighest);
+			min = highest;
+			max = sc.getCooldown();
+			percentage = min / max;
+		}catch(Exception e) {
+			percentage = 0;
+		}
+		
+		BossBar bar = null;
+		BarColor[] colors = BarColor.values();
+		BarColor color = colors[(new Random().nextInt(colors.length - 1))];
+		if (InputEvent.cooldownbar.containsKey(this.getPlayer().getUniqueId().toString()) && skillhighest > 0 && highest > 0) {
+			bar = InputEvent.cooldownbar.get(this.getPlayer().getUniqueId().toString());
+			if (!bar.getTitle().startsWith(ChatColor.translateAlternateColorCodes('&', "&a" + sc.getSkillname()))) {
+				if (bar.getColor().equals(color)) {
+					color = colors[(new Random().nextInt(colors.length - 1))];
+				}
+				bar.setColor(color);
+			}
+			bar.setTitle(ChatColor.translateAlternateColorCodes('&', "&a" + sc.getSkillname() + " &3cooldown &b" + highest + " &3seconds"));
+			bar.setProgress(percentage);
+			bar.setVisible(true);
+			if (!bar.getPlayers().contains(this.getPlayer().getPlayer())) {
+				bar.addPlayer(this.getPlayer().getPlayer());
+			}
+		}else {
+			if (!InputEvent.cooldownbar.containsKey(this.getPlayer().getUniqueId().toString())) {
+				bar = Bukkit.createBossBar(ChatColor.translateAlternateColorCodes('&', "&a" + sc.getSkillname() + " &3cooldown &b" + highest + " &3seconds"), color, BarStyle.SOLID);
+				bar.setTitle(ChatColor.translateAlternateColorCodes('&', "&a" + sc.getSkillname() + " &3cooldown &b" + highest + " &3seconds"));
+				bar.setProgress(percentage);
+				bar.setVisible(true);
+			}
+			if (skillhighest == 0 || highest <= 0) {
+				bar = InputEvent.cooldownbar.get(uuid.toString());
+				bar.removeAll();
+				bar.setVisible(false);
+				InputEvent.cooldownbar.remove(this.getPlayer().getUniqueId().toString());
+			}else {
+				InputEvent.cooldownbar.put(this.getPlayer().getUniqueId().toString(), bar);
+			}
+		}
+	}
+	
 	public void initBaseData() {
 		ConfigManager.createFile(getFile());
 		ConfigManager.input(getFile(), "player-name", this.player.getName());
@@ -114,13 +187,6 @@ public class PlayerData {
 		}
 	}
 	
-	public SkillCard getSkillCard(int slot) {
-		if (ConfigManager.contains(getFile(), "skills." + slot)) {
-			return SkillCard.skillcards.get(ConfigManager.get(getFile(), "skills." + slot).toString());
-		}else {
-			return null;
-		}
-	}
 	
 	public void registerCooldown() {
 		for (String path : config.getConfigurationSection("cooldown").getKeys(false)) {
@@ -138,10 +204,23 @@ public class PlayerData {
 		}	
 	}
 	
+	public SkillCard getSkillCard(int slot) {
+		if (ConfigManager.contains(getFile(), "skills." + slot)) {
+			return SkillCard.skillcards.get(ConfigManager.get(getFile(), "skills." + slot).toString());
+		}else{
+			return null;
+		}
+	}
+	
+	public boolean hasSkillCard(int slot) {
+		return ConfigManager.contains(getFile(), "skills." + slot);
+	}
+	
 	public void setCooldown(int slot, int set) {
 		ConfigManager.input(getFile(), "cooldown." + slot, set);
-		if (Integer.parseInt(ConfigManager.get(getFile(), "cooldown." + slot).toString()) < 0) {
+		if (Integer.parseInt(ConfigManager.get(getFile(), "cooldown." + slot).toString()) <= 0) {
 			ConfigManager.input(getFile(), "cooldown." + slot, 0);
+			InputEvent.cooldown.put(getPlayer().getUniqueId().toString() + ":" + slot, getCooldowns().get(slot));
 		}
 		InputEvent.cooldown.put(getPlayer().getUniqueId().toString() + ":" + slot, getCooldowns().get(slot));
 	}

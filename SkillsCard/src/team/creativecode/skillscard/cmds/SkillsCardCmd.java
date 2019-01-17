@@ -1,16 +1,15 @@
 package team.creativecode.skillscard.cmds;
 
-import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import team.creativecode.skillscard.Main;
+import team.creativecode.skillscard.events.InputEvent;
 import team.creativecode.skillscard.manager.SkillCard;
 import team.creativecode.skillscard.menu.MenuManager;
 import team.creativecode.skillscard.menu.skillcard.SkillCardPlayerMenu;
-import team.creativecode.skillscard.util.ParticleManager;
 
 public class SkillsCardCmd implements CommandExecutor {
 
@@ -28,7 +27,8 @@ public class SkillsCardCmd implements CommandExecutor {
                 }
                 if (strings.length == 1) {
                 	if (strings[0].equalsIgnoreCase("test")) {
-                		ParticleManager.atomic(p.getLocation(), 1.5, Particle.FLAME, true);
+                		System.out.println(InputEvent.cooldownbar);
+                		System.out.println(InputEvent.cooldown);
                 		return true;
                 	}
                 	if (p.hasPermission("skillscard.admin")){

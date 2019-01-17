@@ -28,11 +28,11 @@ public class SkillCard {
     private long cooldown = 0;
     private String skillname;
     private ItemStack skillitem;
-    private ExecuteType executetype = ExecuteType.HIT;
+    private ExecuteType executetype = ExecuteType.ALL;
     private List<String> abilityquery = new ArrayList<String>();
 
     public enum ExecuteType{
-    	HIT, DAMAGED;
+    	HIT, DAMAGED, PROJECTILE, ALL;
     }
     
     public static void loadSkillCardData(){

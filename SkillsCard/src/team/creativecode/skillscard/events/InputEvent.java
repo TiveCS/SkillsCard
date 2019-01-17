@@ -3,6 +3,7 @@ package team.creativecode.skillscard.events;
 import java.util.HashMap;
 
 import org.bukkit.Material;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,6 +19,7 @@ import team.creativecode.skillscard.menu.MenuManager;
 public class InputEvent implements Listener {
 	
 	//UUID:SLOT, COOLDOWN
+	public static HashMap<String, BossBar> cooldownbar = new HashMap<String, BossBar>();
 	public static HashMap<String, Integer> cooldown = new HashMap<String, Integer>();
 	
 	@EventHandler

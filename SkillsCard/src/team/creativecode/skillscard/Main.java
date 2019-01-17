@@ -23,12 +23,14 @@ import team.creativecode.skillscard.manager.ability.SoundAbility;
 import team.creativecode.skillscard.manager.ability.StickyBombAbility;
 import team.creativecode.skillscard.manager.ability.TeleportAbility;
 import team.creativecode.skillscard.manager.ability.ThrustAbility;
+import team.creativecode.skillscard.manager.ability.TimeWarpAbility;
 import team.creativecode.skillscard.util.ConfigManager;
 
 public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+    	
         loadFile();
         loadCmd();
         loadEvent();
@@ -55,14 +57,16 @@ public class Main extends JavaPlugin {
 						UUID uuid = UUID.fromString(split[0]);
 						PlayerData p = new PlayerData(Bukkit.getPlayer(uuid));
 						p.setCooldown(slot, cooldown - 1);
+						
 						if (cooldown <= 0) {
 							InputEvent.cooldown.remove(key);
 						}
+						p.generateBossBarCooldown();
 					}
 				}catch(Exception e) {}
 			}
         	
-        }, 0, 20L);
+        }, 0, 10L);
     }
 
     private void loadEvent() {
@@ -85,6 +89,7 @@ public class Main extends JavaPlugin {
     	new SoundAbility().register();
     	new ThrustAbility().register();
     	new ParticleAbility().register();
+    	new TimeWarpAbility().register();
     }
     
     public static boolean chance(double chance) {

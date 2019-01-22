@@ -2,6 +2,7 @@ package team.creativecode.skillscard.manager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -25,6 +26,7 @@ public class PlayerData {
 	Main plugin = Main.getPlugin(Main.class);
 	
 	HashMap<Integer, Integer> cooldownSlot = new HashMap<Integer, Integer>();
+	Language lang = Language.languages.get("en-US.yml");
 	OfflinePlayer player;
 	File file;
 	FileConfiguration config;
@@ -36,13 +38,15 @@ public class PlayerData {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		this.config = YamlConfiguration.loadConfiguration(file);
 		if (ConfigManager.contains(getFile(), "cooldown")) {
 			updateCooldownData();
+		}
+		if (ConfigManager.contains(getFile(), "language")) {
+			this.lang = Language.languages.get(ConfigManager.get(getFile(), "language").toString() + ".yml");
 		}
 	}
 	
@@ -117,6 +121,14 @@ public class PlayerData {
 		
 	}
 	
+	public void setLanguage(String file) {
+		if (file.endsWith(".yml")) {
+			lang = Language.languages.get(file);
+		}else {
+			lang = Language.languages.get(file + ".yml");
+		}
+	}
+	
 	public void generateBossBarCooldown() {
 		int highest = -1, skillhighest = 0;
 		UUID uuid = this.getPlayer().getUniqueId();
@@ -182,6 +194,8 @@ public class PlayerData {
 	public void initBaseData() {
 		ConfigManager.createFile(getFile());
 		ConfigManager.input(getFile(), "player-name", this.player.getName());
+		ConfigManager.init(getFile(), "language", "en-US");
+		this.lang = Language.languages.get(ConfigManager.get(getFile(), "language").toString() + ".yml");
 		for (int i = 0; i < 4; i++) {
 			ConfigManager.init(getFile(), "cooldown." + (i + 1), 0);
 		}
@@ -199,9 +213,33 @@ public class PlayerData {
 	}
 	
 	public void updateCooldownData() {
-		for (String path : config.getConfigurationSection("cooldown").getKeys(false)) {
-			cooldownSlot.put(Integer.parseInt(path), config.getInt("cooldown." + path));
-		}	
+		try {
+			for (String path : config.getConfigurationSection("cooldown").getKeys(false)) {
+				cooldownSlot.put(Integer.parseInt(path), config.getInt("cooldown." + path));
+			}
+		}catch(Exception e) {}
+	}
+	
+	public double getCardChanceAverage() {
+		double average = 0;
+		List<String> skill = new ArrayList<String>(this.getConfig().getConfigurationSection("skills").getKeys(false));
+		int size = skill.size();
+		for (String s : skill) {
+			SkillCard sc = this.getSkillCard(Integer.parseInt(s));
+			average += sc.getChance();
+		}
+		average = average/size;
+		return average;
+	}
+	
+	public int getCooldownedSkill() {
+		int skill = 0;
+		for (int a : this.getCooldowns().keySet()) {
+			if (this.getCooldowns().get(a) > 0) {
+				skill++;
+			}
+		}
+		return skill;
 	}
 	
 	public SkillCard getSkillCard(int slot) {
@@ -239,6 +277,10 @@ public class PlayerData {
 
 	public HashMap<Integer, Integer> getCooldowns(){
 		return this.cooldownSlot;
+	}
+	
+	public Language getLanguage() {
+		return lang;
 	}
 
 }

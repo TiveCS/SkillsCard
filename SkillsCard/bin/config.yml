@@ -1,0 +1,3 @@
+prefix: '&7[&9SkillsCard&7]'
+language-file: 'default-lang.yml'
+generate-default-card-file: true

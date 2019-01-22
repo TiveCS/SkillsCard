@@ -7,13 +7,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import team.creativecode.skillscard.manager.Placeholder;
+import team.creativecode.skillscard.manager.PlayerData;
 import team.creativecode.skillscard.menu.MenuManager;
 import team.creativecode.skillscard.util.ItemManager;
 
 public class MainMenu extends MenuManager{
 
+	PlayerData pd;
+	Placeholder plc;
+	
 	public MainMenu(Player mainviewer, int page) {
 		super(mainviewer, page);
+		pd = new PlayerData(mainviewer);
+		plc = new Placeholder(pd);
 		setMenu(Bukkit.createInventory(null, 3*9, "Main Menu"));
 	}
 
@@ -32,8 +39,14 @@ public class MainMenu extends MenuManager{
 			getMenu().setItem(i, ItemManager.generateItem(Material.BLACK_STAINED_GLASS_PANE, " ", new ArrayList<String>()));
 		}
 		
+		lore = new ArrayList<String>(pd.getLanguage().getMessages().get("menu.mainmenu-guide"));
 		getMenu().setItem(10, ItemManager.generateItem(Material.KNOWLEDGE_BOOK, "&e&lGuide", lore));
+		
+		lore = new ArrayList<String>(pd.getLanguage().getMessages().get("menu.mainmenu-skillcard"));
+		//lore.add("&fOpen &a" + pd.getPlayer().getName() + "&f skill menu");
 		getMenu().setItem(13, ItemManager.generateItem(Material.WRITABLE_BOOK, "&d&lSkill Menu", lore));
+		
+		lore = new ArrayList<String>(pd.getLanguage().getMessages().get("menu.mainmenu-statistic"));
 		getMenu().setItem(16, ItemManager.generateItem(Material.SIGN, "&a&lStatistic", lore));
 	}
 

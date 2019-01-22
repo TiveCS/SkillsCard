@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import team.creativecode.skillscard.cmds.SkillsCardCmd;
 import team.creativecode.skillscard.events.AbilityEvent;
 import team.creativecode.skillscard.events.InputEvent;
+import team.creativecode.skillscard.manager.Language;
 import team.creativecode.skillscard.manager.PlayerData;
 import team.creativecode.skillscard.manager.SkillCard;
 import team.creativecode.skillscard.manager.ability.BurnAbility;
@@ -35,6 +36,7 @@ public class Main extends JavaPlugin {
         loadCmd();
         loadEvent();
         SkillCard.loadSkillCardData();
+        Language.loadLanguages();
         loadSkillAbility();
         
        Bukkit.getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
@@ -78,7 +80,7 @@ public class Main extends JavaPlugin {
         getCommand("skillscard").setExecutor(new SkillsCardCmd());
     }
     
-    private void loadSkillAbility() {
+    public static void loadSkillAbility() {
     	new PotionAbility().register();
     	new LightningAbility().register();
     	new DamageAbility().register();
@@ -102,10 +104,18 @@ public class Main extends JavaPlugin {
 
 //     SkillsCard data
         ConfigManager.createFolder(this.getDataFolder() + "/cards");
-        ConfigManager.createFile(new File(this.getDataFolder() + "/cards", "defaultCards.yml"));
+        if (!new File(this.getDataFolder() + "/cards", "defaultCard.yml").exists()) {
+        	this.saveResource("cards/defaultCard.yml", false);
+        }
 
 //     PlayerData
         ConfigManager.createFolder(this.getDataFolder() + "/PlayerData");
+        
+//	   Language
+        ConfigManager.createFolder(this.getDataFolder() + "/Language");
+        if (!new File(this.getDataFolder() + "/Language", "en-US.yml").exists()) {
+        	this.saveResource("Language/en-US.yml", false);
+        }
     }
     
     public static String getNMSVersion() {

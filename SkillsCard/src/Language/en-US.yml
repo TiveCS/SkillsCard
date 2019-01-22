@@ -1,0 +1,24 @@
+action:
+   equip-card: '%prefix% &fEquiped card &f%card% &7at slot &a%slot%'
+   unequip-card: '%prefix% &fUnequiped card &f%card% &7at slot &a%slot%'
+   replace-card: '%prefix% &fReplace card &f%card% &7with &e%replace-card% &7at slot %slot%'
+   skill-cooldown: '&a%card% &3cooldown &b%cooldown% &3seconds'
+   cmd-getskill: '%prefix% &f'
+
+menu:
+   mainmenu-guide: 
+      - ' '
+      - '&fGet lost or confused? click here'
+      - '&fto get help, tips and guide'
+   mainmenu-skillcard:
+      - ' ' 
+      - '&fShow &a%player% &fskill card menu'
+   mainmenu-statistic:
+      - ' '
+      - '&eCard(s) &a%cards-equiped%'
+      - '&eCooldown Skill &c%cards-cooldown%'
+      - '&eChance Avg. &6%cards-chance-average%'
+
+system:
+   reload: '%prefix% &fSuccessfully reload config and language'
+   

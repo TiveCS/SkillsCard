@@ -1,0 +1,14 @@
+Stun:
+   execute-type: HIT
+   chance: 75
+   cooldown: 15
+   ability:
+   - potion{target=@Victim;type=SLOW;duration=20;amplifier=2}
+   - burn{target=@Victim;duration=60;}
+   item:
+      material: BOOK
+      displayname: '&cStun Card'
+      lore:
+      - '&7Stun your victim!'
+      enchantments:
+      - 'SHARPNESS:1'

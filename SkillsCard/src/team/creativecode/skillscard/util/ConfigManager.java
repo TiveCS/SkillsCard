@@ -6,6 +6,8 @@ import java.io.IOException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.google.common.io.Files;
+
 public class ConfigManager {
 
     public static void input(File file, String path, Object object){
@@ -16,6 +18,20 @@ public class ConfigManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public static void saveCopy(File source, File target) {
+    	if (!target.exists()) {
+    		copy(source, target);
+    	}
+    }
+    
+    public static void copy(File source, File target) {
+    	try {
+			Files.copy(source, target);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 
     public static Object get(File file, String path){

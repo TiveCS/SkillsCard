@@ -13,7 +13,15 @@ public class DataConverter {
         }
         return list;
     }
-
+    
+    public static List<String> arrayToList(String[] array){
+    	List<String> list = new ArrayList<String>();
+    	for (String s : array) {
+    		list.add(s);
+    	}
+    	return colored(list);
+    }
+    
     public static List<String> objectToList(Object object){
         List<String> list = new ArrayList<String>();
         String s = object.toString();
@@ -24,7 +32,7 @@ public class DataConverter {
         for (String sp : split){
             list.add(sp);
         }
-        return list;
+        return colored(list);
     }
     
     public static Object matchConvert(Object str) {

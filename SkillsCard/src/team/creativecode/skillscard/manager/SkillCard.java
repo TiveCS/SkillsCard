@@ -1,20 +1,21 @@
 package team.creativecode.skillscard.manager;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
 import team.creativecode.skillscard.Main;
 import team.creativecode.skillscard.util.ConfigManager;
 import team.creativecode.skillscard.util.DataConverter;
 import team.creativecode.skillscard.util.ItemManager;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class SkillCard {
 
